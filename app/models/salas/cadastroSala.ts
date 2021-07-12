@@ -7,7 +7,7 @@ class CadastroSala {
     this.repositorio = repositorio;
   }
 
-  getSala = (idSala: number): Sala => {
+  getSala = (idSala: number): Promise<Sala> => {
     return this.repositorio.getSala(idSala);
   };
 }

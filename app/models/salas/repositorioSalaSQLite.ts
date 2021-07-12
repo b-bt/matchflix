@@ -1,4 +1,5 @@
 import { Sequelize } from "sequelize-typescript";
+import Filme from "../filmes/filme.model";
 import IRepositorioSala from "./repositorioSala.interface";
 import Sala from "./sala.model";
 
@@ -9,8 +10,12 @@ class RepositorioSalaSQLite implements IRepositorioSala {
     this.conexao = conexao;
   }
 
-  getSala(id: number): Sala {
-    throw new Error("Method not implemented.");
+  async getSala(id: number): Promise<Sala> {
+    const sala = await Sala.findByPk(id, {
+      rejectOnEmpty: true,
+      include: Filme,
+    });
+    return sala;
   }
 }
 

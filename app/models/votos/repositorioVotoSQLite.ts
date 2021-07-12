@@ -20,10 +20,21 @@ class RepositorioVotoSQLite implements IRepositorioVoto {
     throw new Error("Method not implemented.");
   }
 
-  salvarVotos(votos: Voto[]): void {
-    // TODO: Call SQLite INSERT
-    throw new Error("Method not implemented.");
-  }
+  salvarVotos = async (votos: Voto[]): Promise<boolean> => {
+    try {
+      await Voto.bulkCreate(
+        votos.map((voto) => ({
+          filmeId: voto.filmeId,
+          querAssistir: voto.querAssistir,
+          usuarioId: voto.usuarioId,
+          salaId: voto.salaId,
+        }))
+      );
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
 }
 
 export default RepositorioVotoSQLite;

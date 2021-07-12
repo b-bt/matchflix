@@ -1,3 +1,4 @@
+import IntencaoVoto from "../../mensagens/intencaoVoto";
 import Filme from "../filmes/filme.model";
 import Sala from "../salas/sala.model";
 import IRepositorioVoto from "./repositorioVoto.interface";
@@ -17,8 +18,21 @@ class CadastroVoto {
     return this.repositorio.getVotos(filme, sala);
   }
 
-  salvarVotos = (votos: Voto[]): void => {
-    this.repositorio.salvarVotos(votos);
+  salvarVotos = (
+    intencoesVoto: IntencaoVoto[],
+    salaId: number,
+    usuarioId: number
+  ): Promise<boolean> => {
+    const votos = intencoesVoto.map((intencao) =>
+      Voto.build({
+        filmeId: intencao.filmeId,
+        querAssistir: intencao.querAssistir,
+        usuarioId: usuarioId,
+        salaId: salaId,
+      })
+    );
+    console.log(votos);
+    return this.repositorio.salvarVotos(votos);
   };
 }
 

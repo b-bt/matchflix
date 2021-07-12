@@ -4,6 +4,7 @@ import CadastroVoto from "../models/votos/cadastroVoto";
 import Filme from "../models/filmes/filme.model";
 import Voto from "../models/votos/voto.model";
 import CadastroSala from "../models/salas/cadastroSala";
+import IntencaoVoto from "../mensagens/intencaoVoto";
 
 class ControladorSala {
   cadastroSala: CadastroSala;
@@ -13,17 +14,19 @@ class ControladorSala {
   constructor(gerenciador: Gerenciador) {
     const repositorioFilme = gerenciador.repositorioFilme;
     const repositorioVoto = gerenciador.repositorioVoto;
+    const repositorioSala = gerenciador.repositorioSala;
+    this.cadastroSala = new CadastroSala(repositorioSala);
     this.cadastroFilmes = new CadastroFilme(repositorioFilme);
     this.cadastroVotos = new CadastroVoto(repositorioVoto);
   }
 
-  pegarFilmes = (salaId: number): Filme[] => {
-    const sala = this.cadastroSala.getSala(salaId);
-    return this.cadastroFilmes.getFilmesDaSala(sala);
+  pegarFilmes = async (salaId: number): Promise<Filme[]> => {
+    const sala = await this.cadastroSala.getSala(salaId);
+    return sala.filmes;
   };
 
-  enviarVotos = (votos: Voto[]): void => {
-    this.cadastroVotos.salvarVotos(votos);
+  enviarVotos = (votos: IntencaoVoto[], salaId: number): Promise<boolean> => {
+    return this.cadastroVotos.salvarVotos(votos, salaId, 1);
   };
 }
 

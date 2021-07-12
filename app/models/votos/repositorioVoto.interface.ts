@@ -5,7 +5,7 @@ import Voto from "./voto.model";
 interface IRepositorioVoto {
   getVotos(filme: Filme, sala: Sala): Voto[];
   getQuantVotos(sala: Sala): number;
-  salvarVotos(votos: Voto[]): void;
+  salvarVotos(votos: Voto[]): Promise<boolean>;
 }
 
 export default IRepositorioVoto;

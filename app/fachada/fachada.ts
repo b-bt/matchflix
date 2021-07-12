@@ -1,6 +1,7 @@
 import ControladorResultadoVotacao from "../controladores/controladorResultadoVotacao";
 import ControladorSala from "../controladores/controladorSala";
 import Gerenciador from "../manager/gerenciador";
+import IntencaoVoto from "../mensagens/intencaoVoto";
 import ResultadoVotosFilme from "../mensagens/resultadoVotosFilme";
 import Filme from "../models/filmes/filme.model";
 import Sala from "../models/salas/sala.model";
@@ -17,12 +18,12 @@ class Fachada {
     );
   }
 
-  pegarFilmes(salaId: number): Filme[] {
-    return this.controladorSala.pegarFilmes(sala);
-  }
+  pegarFilmes = async (salaId: number): Promise<Filme[]> => {
+    return this.controladorSala.pegarFilmes(salaId);
+  };
 
-  enviarVotos(votos: Voto[]) {
-    return this.controladorSala.enviarVotos(votos);
+  enviarVotos(votos: IntencaoVoto[], salaId: number): Promise<boolean> {
+    return this.controladorSala.enviarVotos(votos, salaId);
   }
 
   calcularResultado(sala: Sala): ResultadoVotosFilme[] {
