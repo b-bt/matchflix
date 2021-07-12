@@ -1,44 +1,49 @@
 import Gerenciador from "../manager/gerenciador";
 import ResultadoVotosFilme from "../mensagens/resultadoVotosFilme";
+import CadastroSala from "../models/salas/cadastroSala";
 import Sala from "../models/salas/sala.model";
 import CadastroVoto from "../models/votos/cadastroVoto";
 import Voto from "../models/votos/voto.model";
 
 class ControladorResultadoVotacao {
   cadastroVoto: CadastroVoto;
+  cadastroSala: CadastroSala;
 
   constructor(gerenciador: Gerenciador) {
     const repositorioVoto = gerenciador.repositorioVoto;
+    const repositorioSala = gerenciador.repositorioSala;
     this.cadastroVoto = new CadastroVoto(repositorioVoto);
+    this.cadastroSala = new CadastroSala(repositorioSala);
   }
 
-  calcularResultado = (sala: Sala): ResultadoVotosFilme[] => {
-    const filmes = sala.filmes;
-    const resultados: ResultadoVotosFilme[] = [];
+  calcularResultado = async (
+    salaId: number
+  ): Promise<ResultadoVotosFilme[]> => {
+    const sala = await this.cadastroSala.getSala(salaId);
+    const votos = sala.votos;
 
-    filmes.forEach((filme) => {
-      const votos = this.cadastroVoto.getVotos(filme, sala);
-      resultados.push(this.consolidarVotos(votos));
-    });
+    const resultados = votos.reduce((acc, voto) => {
+      if (voto.querAssistir) {
+        const resultadoFilme = acc.find(
+          (resultado) => resultado.filme.id === voto.filmeId
+        );
 
-    return resultados;
+        if (resultadoFilme == null) {
+          acc.push(new ResultadoVotosFilme(voto.filme, 1));
+        } else {
+          resultadoFilme.votos++;
+        }
+      }
+      return acc;
+    }, new Array<ResultadoVotosFilme>());
+
+    return resultados.sort((r1, r2) => r2.votos - r1.votos);
   };
 
   verificarVotacaoAcabou = (sala: Sala): boolean => {
     const qtdVotos = this.cadastroVoto.getQuantVotos(sala);
     const numMaxVotos = sala.participantes * sala.filmes.length;
     return qtdVotos >= numMaxVotos;
-  };
-
-  private consolidarVotos = (votos: Voto[]): ResultadoVotosFilme => {
-    if (votos.length === 0)
-      throw new Error("Lista de votos não pode ser vazia");
-
-    const votosPositivos = votos.filter((voto) => voto.querAssistir);
-
-    const filme = votos[0].filme;
-
-    return new ResultadoVotosFilme(filme, votosPositivos);
   };
 }
 

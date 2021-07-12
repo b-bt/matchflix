@@ -26,9 +26,11 @@ class Fachada {
     return this.controladorSala.enviarVotos(votos, salaId);
   }
 
-  calcularResultado(sala: Sala): ResultadoVotosFilme[] {
-    return this.controladorResultadoVotacao.calcularResultado(sala);
-  }
+  calcularResultado = async (
+    salaId: number
+  ): Promise<ResultadoVotosFilme[]> => {
+    return this.controladorResultadoVotacao.calcularResultado(salaId);
+  };
 
   verificarVotacaoAcabou(sala: Sala): boolean {
     return this.controladorResultadoVotacao.verificarVotacaoAcabou(sala);

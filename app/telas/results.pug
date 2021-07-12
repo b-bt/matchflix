@@ -1,0 +1,22 @@
+doctype html
+head
+  title Resultados
+  link(rel='preconnect' href='https://fonts.googleapis.com')
+  link(rel='preconnect' href='https://fonts.gstatic.com' crossorigin='')
+  link(href='https://fonts.googleapis.com/css2?family=Raleway:wght@200;400;700&display=swap' rel='stylesheet')
+  link(href='http://localhost:8100/css/style-result.css' rel='stylesheet')
+.page
+  .modal
+    .results-header
+      h1 Resultado
+    .results-table
+      .results-tr
+        div Pos.
+        div Titulo
+        div Votos
+      each resultado, index in resultados
+        .results-tr
+          div #{index + 1}.
+          div #{resultado.filme.titulo}
+          div #{resultado.votos}
+    

@@ -1,5 +1,6 @@
 import express from "express";
 import path from "path";
+import TelaResultadoVotacaoControle from "./app/controles/telaResultadoVotacaoControle";
 import TelaSalaControle from "./app/controles/telaSalaControle";
 import FabricaRepositorioSQLite from "./app/fabricas/fabricaRepositorioSqlite";
 import Fachada from "./app/fachada/fachada";
@@ -46,9 +47,17 @@ app.post("/salas/:idSala", async (req, res) => {
   }
 });
 
-app.get("/resultados/:idSala", (req, res) =>
-  res.send("Express + TypeScript Server")
-);
+app.get("/resultados/:idSala", async (req, res) => {
+  const salaId = parseInt(req.params.idSala);
+  const tela = new TelaResultadoVotacaoControle(salaId, fachada);
+
+  try {
+    const resultados = await tela.visualizarResultado(salaId);
+    res.render("results", { resultados: resultados });
+  } catch (error) {
+    res.send("error");
+  }
+});
 
 app.get("/resultados/:idSala/status", (req, res) =>
   res.send("Express + TypeScript Server")
