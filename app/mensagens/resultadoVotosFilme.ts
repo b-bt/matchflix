@@ -1,3 +1,6 @@
+import Filme from "../models/filmes/filme.model";
+import Voto from "../models/votos/voto.model";
+
 class ResultadoVotosFilme {
   votos: Voto[];
   filme: Filme;
@@ -7,3 +10,5 @@ class ResultadoVotosFilme {
     this.votos = votos;
   }
 }
+
+export default ResultadoVotosFilme;

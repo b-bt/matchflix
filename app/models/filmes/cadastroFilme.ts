@@ -1,3 +1,7 @@
+import Sala from "../salas/sala.model";
+import Filme from "./filme.model";
+import IRepositorioFilme from "./repositorioFilme.interface";
+
 class CadastroFilme {
   repositorio: IRepositorioFilme;
   constructor(repositorio: IRepositorioFilme) {
@@ -8,3 +12,5 @@ class CadastroFilme {
     return this.repositorio.getFilmes(sala);
   };
 }
+
+export default CadastroFilme;

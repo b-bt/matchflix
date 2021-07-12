@@ -1,16 +1,20 @@
-class Gerenciador {
-  static instancia: Gerenciador = new Gerenciador();
+import FabricaAbstrataRepositorio from "../fabricas/fabricaAbstrataRepositorios.interface";
+import Fachada from "../fachada/fachada";
+import IRepositorioFilme from "../models/filmes/repositorioFilme.interface";
+import IRepositorioSala from "../models/salas/repositorioSala.interface";
+import IRepositorioVoto from "../models/votos/repositorioVoto.interface";
 
+class Gerenciador {
   fachada: Fachada;
   repositorioFilme: IRepositorioFilme;
   repositorioSala: IRepositorioSala;
   repositorioVoto: IRepositorioVoto;
 
-  private constructor() {
-    //   TODO: Replace with factory
-    this.fachada = new Fachada();
-    this.repositorioFilme = new RepositorioFilmePG();
-    this.repositorioSala = new RepositorioSalaPG();
-    this.repositorioVoto = new RepositorioVotoPG();
+  constructor(fabricaRepositorio: FabricaAbstrataRepositorio) {
+    this.repositorioSala = fabricaRepositorio.criarRepositorioSala();
+    this.repositorioFilme = fabricaRepositorio.criarRepositorioFilme();
+    this.repositorioVoto = fabricaRepositorio.criarRepositorioVoto();
   }
 }
+
+export default Gerenciador;
