@@ -40,7 +40,9 @@ script.
         'Content-Type': 'application/json'
       },
     }).then((response) => {
-      if(response.ok) window.location.href = 'http://localhost:8100/'
+      if(response.ok) {
+        const urlParts = window.location.href.split("/");
+        window.location.href = 'http://localhost:8100/resultados/' + urlParts[urlParts.length - 1]}
       else console.log("Erro no request")
     });
   }
