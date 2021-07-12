@@ -8,5 +8,6 @@ O MatchFlix é uma aplicação para ajudar amigos a decidirem um filme para assi
 
 ### Entrega 1
 - [Apresentação 1 (RUP)](https://docs.google.com/presentation/d/1ycp-5mYQsLeoxy89uw5bzFBtvqKiy_PqHgWZFBIpi2I/edit?usp=sharing)
-- [Arquivo Astah de análise](https://drive.google.com/file/d/1jgvorP3qvEDPk5sm_aDbCJQSjCcuzf-i/view?usp=sharing)
+- [Arquivo Astah da fase de análise](https://drive.google.com/file/d/1jgvorP3qvEDPk5sm_aDbCJQSjCcuzf-i/view?usp=sharing)
+- [Arquivo Astah da fase de projeto](https://drive.google.com/file/d/1izFHPwfyUcTh6fRw8CCejh_m9WHP_cRz/view?usp=sharing)
 - [Implementação](https://github.com/b-bt/matchflix/tree/main/app)
