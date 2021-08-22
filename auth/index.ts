@@ -1,11 +1,11 @@
 import express from "express";
 import path from "path";
-import TelaResultadoVotacaoControle from "./app/controles/telaResultadoVotacaoControle";
-import TelaSalaControle from "./app/controles/telaSalaControle";
-import FabricaRepositorioSQLite from "./app/fabricas/fabricaRepositorioSqlite";
-import Fachada from "./app/fachada/fachada";
-import Gerenciador from "./app/manager/gerenciador";
-import IntencaoVoto from "./app/mensagens/intencaoVoto";
+import TelaResultadoVotacaoControle from "./controles/telaResultadoVotacaoControle";
+import TelaSalaControle from "./controles/telaSalaControle";
+import FabricaRepositorioSQLite from "./fabricas/fabricaRepositorioSqlite";
+import Fachada from "./fachada/fachada";
+import Gerenciador from "./manager/gerenciador";
+import IntencaoVoto from "./mensagens/intencaoVoto";
 
 const app = express();
 app.use(express.json());

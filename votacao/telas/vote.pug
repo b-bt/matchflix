@@ -1,0 +1,64 @@
+doctype html
+head
+  title Votação
+  link(rel='preconnect' href='https://fonts.googleapis.com')
+  link(rel='preconnect' href='https://fonts.gstatic.com' crossorigin='')
+  link(href='https://fonts.googleapis.com/css2?family=Raleway:wght@200;400;700&display=swap' rel='stylesheet')
+  link(href='http://localhost:8100/css/style.css' rel='stylesheet')
+.page
+  each filme, index in filmes
+    .modal(
+      data-index=index
+      data-filme=filme
+      class={active: index === 0}
+      )
+      .movie-header
+        h1 Votação
+        h2 #{index + 1}/#{filmes.length}
+      .movie-card
+        h2 #{filme.titulo}
+        p #{filme.descricao}
+      .movie-form
+        p Você quer assistir esse filme?
+        button(onclick=`votar(true, ${filme.id}, ${index} )`) sim
+        button(onclick=`votar(false, ${filme.id}, ${index})`) não
+
+script. 
+
+  const votos = [];
+  votar = (querAssistir, filme, index) => {
+    votos.push({querAssistir: querAssistir, filmeId: filme})
+    atualizarTela(index)
+  }
+
+  enviarVotos = () => {
+    const url = window.location.href;
+    fetch(url, {
+      method: "POST",
+      body: JSON.stringify(votos),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    }).then((response) => {
+      if(response.ok) {
+        const urlParts = window.location.href.split("/");
+        window.location.href = 'http://localhost:8100/resultados/' + urlParts[urlParts.length - 1]}
+      else console.log("Erro no request")
+    });
+  }
+
+  atualizarTela = (filmeVotadoIndex) => {
+    const modalAtual = document.querySelector(`div.modal[data-index="${filmeVotadoIndex}"]`);
+    modalAtual.classList.remove('active');
+
+    const modalProximo = document.querySelector(`div.modal[data-index="${filmeVotadoIndex + 1}"]`);
+
+    if (modalProximo === null) {
+      enviarVotos();
+    } else {
+      modalProximo.classList.add('active');
+    }
+
+  }
+  
+  
