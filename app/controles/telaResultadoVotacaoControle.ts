@@ -1,15 +1,25 @@
 import Fachada from "../fachada/fachada";
 import ResultadoVotosFilme from "../mensagens/resultadoVotosFilme";
 import Sala from "../models/salas/sala.model";
+import { Request, Response } from "express";
 
 class TelaResultadoVotacaoControle {
-  salaId: number;
   fachada: Fachada;
 
-  constructor(salaId: number, fachada: Fachada) {
-    this.salaId = salaId;
+  constructor(fachada: Fachada) {
     this.fachada = fachada;
   }
+
+  getResultadoVotacao = async (req: Request, res: Response) => {
+    const salaId = parseInt(req.params.idSala);
+
+    try {
+      const resultados = await this.visualizarResultado(salaId);
+      res.render("results", { resultados: resultados });
+    } catch (error) {
+      res.send("error");
+    }
+  };
 
   verificarVotacaoAcabou = (sala: Sala): boolean => {
     return this.fachada.verificarVotacaoAcabou(sala);
