@@ -1,19 +1,11 @@
 import FabricaAbstrataRepositorio from "../fabricas/fabricaAbstrataRepositorios.interface";
-import Fachada from "../fachada/fachada";
-import IRepositorioFilme from "../models/filmes/repositorioFilme.interface";
-import IRepositorioSala from "../models/salas/repositorioSala.interface";
-import IRepositorioVoto from "../models/votos/repositorioVoto.interface";
+import IRepositorioUsuario from "../models/usuarios/repositorioUsuario.interface";
 
 class Gerenciador {
-  fachada: Fachada;
-  repositorioFilme: IRepositorioFilme;
-  repositorioSala: IRepositorioSala;
-  repositorioVoto: IRepositorioVoto;
+  repositorioUsuario: IRepositorioUsuario;
 
   constructor(fabricaRepositorio: FabricaAbstrataRepositorio) {
-    this.repositorioSala = fabricaRepositorio.criarRepositorioSala();
-    this.repositorioFilme = fabricaRepositorio.criarRepositorioFilme();
-    this.repositorioVoto = fabricaRepositorio.criarRepositorioVoto();
+    this.repositorioUsuario = fabricaRepositorio.criarRepositorioUsuario();
   }
 }
 
