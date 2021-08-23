@@ -1,8 +1,10 @@
-import Sala from "../salas/sala.model";
 import Filme from "./filme.model";
 
 interface IRepositorioFilme {
-  getFilmes(sala: Sala): Filme[];
+  getFilmes(filmes: Record<string, any>[]): Promise<Filme[]>;
+  addFilmes(
+    filmes: { id: string; titulo: string; descricao: string; ano: number }[]
+  ): Promise<Filme[]>;
 }
 
 export default IRepositorioFilme;

@@ -1,5 +1,4 @@
 import { Sequelize } from "sequelize-typescript";
-import Sala from "../salas/sala.model";
 import Filme from "./filme.model";
 import IRepositorioFilme from "./repositorioFilme.interface";
 
@@ -9,11 +8,15 @@ class RepositorioFilmeSQLite implements IRepositorioFilme {
   constructor(conexao: Sequelize) {
     this.conexao = conexao;
   }
+  addFilmes = async (
+    filmes: { id: string; titulo: string; descricao: string; ano: number }[]
+  ): Promise<Filme[]> => {
+    return await Filme.bulkCreate(filmes, { ignoreDuplicates: true });
+  };
 
-  getFilmes(sala: Sala): Filme[] {
-    //   TODO: Call SQLite SELECT
-    throw new Error("Method not implemented.");
-  }
+  getFilmes = async (filmes: Record<string, any>[]): Promise<Filme[]> => {
+    return Filme.findAll({ limit: 10 });
+  };
 }
 
 export default RepositorioFilmeSQLite;
