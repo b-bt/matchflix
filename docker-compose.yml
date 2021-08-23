@@ -29,9 +29,6 @@ services:
       - /home/node/app/node_modules
     networks:
       - app-network
-    links:
-      - "auth-service"
-      - "filmes-service"
     command: npx nodemon index.ts
 
   filmes-service:
@@ -49,6 +46,35 @@ services:
       - app-network
     command: npx nodemon index.ts
 
+  frontend-service:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    image: node-frontend-service
+    restart: unless-stopped
+    ports:
+      - "8083:3000"
+    volumes:
+      - ./front:/home/node/app
+      - /home/node/app/node_modules
+    networks:
+      - app-network
+    command: npm run start
+
+  gateway-service:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    image: node-gateway-service
+    restart: unless-stopped
+    ports:
+      - "8084:8100"
+    volumes:
+      - ./gateway:/home/node/app
+      - /home/node/app/node_modules
+    networks:
+      - app-network
+    command: npx nodemon index.ts
 networks:
   app-network:
     driver: bridge
