@@ -1,11 +1,4 @@
-import {
-  Model,
-  Column,
-  Table,
-  BelongsTo,
-  ForeignKey,
-} from "sequelize-typescript";
-import Sala from "../salas/sala.model";
+import { Model, Column, Table } from "sequelize-typescript";
 
 @Table
 class Filme extends Model {
@@ -15,12 +8,8 @@ class Filme extends Model {
   @Column
   descricao: string;
 
-  @ForeignKey(() => Sala)
   @Column
-  salaId: number;
-
-  @BelongsTo(() => Sala)
-  sala: Sala;
+  ano: number;
 }
 
 export default Filme;

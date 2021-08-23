@@ -1,9 +1,17 @@
-import { Model, Table, HasMany } from "sequelize-typescript";
-import Voto from "../votos/voto.model";
+import { Model, Table, HasMany, Column } from "sequelize-typescript";
 
 @Table
 class Usuario extends Model {
-  @HasMany(() => Voto)
-  votos: Voto[];
+  @Column
+  nome: string;
+
+  @Column({ unique: true })
+  email: string;
+
+  @Column
+  senha: string;
+
+  @Column({ unique: true })
+  token: string;
 }
 export default Usuario;

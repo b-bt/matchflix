@@ -1,11 +1,7 @@
-import IRepositorioFilme from "../models/filmes/repositorioFilme.interface";
-import IRepositorioSala from "../models/salas/repositorioSala.interface";
-import IRepositorioVoto from "../models/votos/repositorioVoto.interface";
+import IRepositorioUsuario from "../models/usuarios/repositorioUsuario.interface";
 
 interface FabricaAbstrataRepositorio {
-  criarRepositorioFilme(): IRepositorioFilme;
-  criarRepositorioSala(): IRepositorioSala;
-  criarRepositorioVoto(): IRepositorioVoto;
+  criarRepositorioUsuario(): IRepositorioUsuario;
 }
 
 export default FabricaAbstrataRepositorio;

@@ -1,40 +1,63 @@
 import express from "express";
-import path from "path";
-import TelaResultadoVotacaoControle from "./controles/telaResultadoVotacaoControle";
-import TelaSalaControle from "./controles/telaSalaControle";
+import passport from "passport";
+import { UniqueTokenStrategy } from "passport-unique-token";
+import { Strategy as LocalStrategy } from "passport-local";
 import FabricaRepositorioSQLite from "./fabricas/fabricaRepositorioSqlite";
-import Fachada from "./fachada/fachada";
 import Gerenciador from "./manager/gerenciador";
-import IntencaoVoto from "./mensagens/intencaoVoto";
+import ControladorAuth from "./controladores/controladorAuth";
 
 const app = express();
 app.use(express.json());
+app.use(passport.initialize());
 
-app.set("view engine", "pug");
-app.set("views", path.join(__dirname, "app/telas"));
+// Passport Middlewares
+passport.use(
+  new UniqueTokenStrategy(async (token, done) => {
+    try {
+      const usuario = await gerenciador.repositorioUsuario.getUsuario(token);
+      return done(null, usuario);
+    } catch (error) {
+      return done(null, false);
+    }
+  })
+);
 
-app.use(express.static(path.join(__dirname, "app/static")));
+passport.use(
+  new LocalStrategy(
+    { usernameField: "email", passwordField: "senha", session: false },
+    (username, password, done) => {
+      try {
+        const usuario =
+          gerenciador.repositorioUsuario.getUsuarioByEmail(username);
+        return done(null, usuario);
+      } catch (error) {
+        return done(error);
+      }
+    }
+  )
+);
 
 const PORT = 8100;
 const fabricaRepositorio = new FabricaRepositorioSQLite();
 const gerenciador = new Gerenciador(fabricaRepositorio);
-const fachada = new Fachada(gerenciador);
+const controladorAuth = new ControladorAuth(gerenciador);
 
-const telaSalaControle = new TelaSalaControle(fachada);
-const telaResultadoVotacaoControle = new TelaResultadoVotacaoControle(fachada);
-
-app.get("/", (req, res) => res.send("Seja bem-vindo ao MatchFlix"));
-
-app.get("/salas/:idSala", telaSalaControle.getSala);
-app.post("/salas/:idSala", telaSalaControle.postSala);
 app.get(
-  "/resultados/:idSala",
-  telaResultadoVotacaoControle.getResultadoVotacao
+  "/check",
+  passport.authenticate("token", { session: false }),
+  controladorAuth.checarUsuario
 );
-
-app.get("/resultados/:idSala/status", (req, res) =>
-  res.send("Express + TypeScript Server")
+app.post(
+  "/login",
+  passport.authenticate("local", { session: false }),
+  controladorAuth.login
 );
+app.post(
+  "/logout",
+  passport.authenticate("token", { session: false }),
+  controladorAuth.logout
+);
+app.post("/cadastro", controladorAuth.cadastrar);
 
 app.listen(PORT, () => {
   console.log(`⚡️[server]: Server is running at https://localhost:${PORT}`);
