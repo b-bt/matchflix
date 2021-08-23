@@ -2,13 +2,13 @@ import axios, { AxiosInstance } from "axios";
 import { getToken } from "./auth";
 
 const api: AxiosInstance = axios.create({
-  baseURL: "descobre.ai",
+  baseURL: "http://localhost:8084",
 });
 
 api.interceptors.request.use(async (config) => {
   const token = getToken();
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    config.headers.token = `${token}`;
   }
   return config;
 });

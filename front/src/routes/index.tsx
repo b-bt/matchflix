@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PrivateRoute: React.FC<{
-  component: React.FC;
+  component: React.ComponentType<any>;
   path: string;
   exact: boolean;
 }> = (props) => {
@@ -46,8 +46,8 @@ const Routes = () => {
         <Switch>
           <Route path="/login" component={Login} exact />
           <PrivateRoute path="/create" component={CreateRoom} exact />
-          <PrivateRoute path="/room" component={Room} exact />
-          <PrivateRoute path="/result" component={Result} exact />
+          <Route path="/room/:roomId" component={Room} exact />
+          <Route path="/result/:roomId" component={Result} exact />
           <PrivateRoute path="/" component={CreateRoom} exact />
         </Switch>
       </Paper>

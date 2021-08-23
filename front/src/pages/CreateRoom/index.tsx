@@ -10,7 +10,8 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import GroupIcon from "@material-ui/icons/Group";
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { generatePath, useHistory } from "react-router-dom";
+import api from "../../services/api";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -34,6 +35,8 @@ const CreateRoom = () => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
+    console.log(event);
+    console.log(value);
     setNumberOfPlayers(parseInt(value));
   };
 
@@ -42,8 +45,10 @@ const CreateRoom = () => {
   ) => {
     try {
       event.preventDefault();
-      //api call
-      history.push("/room");
+      const res = await api.post("/salas", {
+        "qtdParticipantes": numberOfPlayers
+      });
+      history.push({pathname:generatePath("/room/:roomId", {roomId: res.data.id})});
     } catch {
       console.log("Erro ao tentar criar a sala!");
     }
@@ -58,7 +63,7 @@ const CreateRoom = () => {
           </Typography>
         </Grid>
         <FormControl className={classes.margin}>
-          <InputLabel>Quantidade de Jogadores</InputLabel>
+          <InputLabel>Quantidade de Pessoas</InputLabel>
           <Input
             name={"players-count"}
             value={numberOfPlayers}

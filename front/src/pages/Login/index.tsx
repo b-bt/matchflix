@@ -12,7 +12,6 @@ import { AccountCircle } from "@material-ui/icons/";
 import LockIcon from "@material-ui/icons/Lock";
 import { useState } from "react";
 import { login } from "../../services/auth";
-import api from "../../services/api";
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -63,8 +62,7 @@ const Login = () => {
     event.preventDefault();
     const { email, password } = formValues;
     try {
-      const response = await api.post("/session", { email, password });
-      login(response.data.token);
+      await login(email, password);
       history.push("/create");
     } catch (err) {
       console.log("Erro ao tentar fazer login!");

@@ -1,7 +1,10 @@
 import { Button, Grid, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { generatePath, useHistory, useParams } from "react-router-dom";
+import api from "../../services/api";
+import { MatchProps } from "../../types";
+
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -27,38 +30,88 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface Vote {
-  movieId: string;
-  vote: boolean;
+  filmeId: string;
+  querAssistir: boolean;
 }
 
-const Room = () => {
+interface Movie {
+  id: string;
+  titulo: string;
+  descricao: string;
+}
+
+interface Sala {
+  qtdParticipantes: number;
+  filmes: Movie[];
+}
+
+const Room = ({ match }: MatchProps) => {
   const history = useHistory();
   const classes = useStyles();
 
   const [currentMovieIndex, setCurrentMovieIndex] = useState<number>(0);
-  const [movies, setMovies] = useState<Object[]>([]);
   const [votes, setVotes] = useState<Vote[]>([]);
+  const [sala, setSala] = useState<Sala>({qtdParticipantes: 0, filmes: []} as Sala);
+  const salaId = useParams()
 
   const handleVote = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     const currentVote = (event.target as any).name === "yes-btn";
-    // setVotes((votes) => [
-    //   ...votes,
-    //   { movieId: movies[currentMovieIndex].id, vote: currentVote } as Vote,
-    // ]);
-    setCurrentMovieIndex((index) => index + 1);
+    const movieId = getCurrentMovie().id;
+
+    const isLastVote = votes.length >= sala.filmes.length-1;
+    if (votes.length > 0 && isLastVote) {
+      const allVotes = [
+        ...votes,
+        { filmeId: movieId, querAssistir: currentVote } 
+      ];
+      const postVotes = async () => {
+        const roomId = match.params.roomId;
+        await api.post(`/salas/${roomId}`, allVotes);
+        history.push({pathname: generatePath("/result/:roomId", {roomId: roomId})});
+      }
+      postVotes()
+    } else {
+      setVotes((votes) => [
+        ...votes,
+        { filmeId: movieId, querAssistir: currentVote } as Vote,
+      ]);
+      setCurrentMovieIndex((index) => index + 1);
+    }
   };
 
-  useEffect(() => {
-    if (votes.length === movies.length) {
-      // post votes
-      history.push("/result");
+  const getCurrentMovie = (): Movie => {
+    if (!sala) {
+      // throw new Error("sala não")
+      return { titulo: "", descricao: "" } as Movie;
     }
-  }, [history, movies, votes]);
+    return sala.filmes[currentMovieIndex];
+  };
+
+  // useEffect(() => {
+    // const hasFinishedVoting = votes.length === sala.filmes.length;
+    // if (votes.length > 0 && hasFinishedVoting) {
+    //   const postVotes = async () => {
+    //     const roomId = match.params.roomId;
+    //     await api.post(`/salas/${roomId}`);
+    //     history.push("/result");
+    //   }
+    //   postVotes()
+    // }
+  // }, [history, sala, votes, match.params.roomId]);
 
   useEffect(() => {
-    //fetch movies
-  }, []);
+    const fetchRoom = async () => {
+      const roomId = 2;
+      const res = await api.get(`/salas/${roomId}`);
+      console.log(res);
+      const resultData = res.data as Sala
+      console.log(resultData);
+      setSala(resultData);
+    };
+    fetchRoom()
+  }, [salaId]);
+
 
   return (
     <>
@@ -68,14 +121,14 @@ const Room = () => {
             Votação
           </Typography>
           <Typography variant={"h5"}>
-            {currentMovieIndex.toString + "/" + movies.length.toString}
+            {`${currentMovieIndex.toString()}/${sala.filmes.length.toString()}`}
           </Typography>
         </Grid>
         <Grid container direction={"column"} className={classes.movie}>
           <Typography className={classes.margin} variant={"h5"}>
-            Título do Filme
+            {getCurrentMovie() ? getCurrentMovie().titulo : ""}
           </Typography>
-          <Typography className={classes.margin}>Descrição do Filme</Typography>
+          <Typography className={classes.margin}>{getCurrentMovie() ? getCurrentMovie().descricao : ""}</Typography>
         </Grid>
         <Grid item>
           <Typography>Você quer assistir esse filme?</Typography>

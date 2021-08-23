@@ -21,16 +21,16 @@ class ControladorSala {
     const salaId = parseInt(req.params.idSala);
 
     const userData = await AuthService.validarUsuario(token);
-    const filmes = await FilmesService.fetchFilmes();
 
-    // this.repositorioSala.res.json(userData);
+    const sala = await this.repositorioSala.getSala(salaId);
+    const filmesIds = sala.getFilmesIds().map((id) => parseInt(id));
+    const filmes = await FilmesService.fetchFilmesPorIds(filmesIds);
 
-    // try {
-    //   const filmes = await this.carregarFilmes(salaId);
-    //   res.render("vote", { filmes: filmes });
-    // } catch (error) {
-    //   res.send(error);
-    // }
+    res.json({
+      id: sala.id,
+      qtdParticipantes: sala.participantes,
+      filmes: filmes,
+    });
   };
 
   criarSala = async (req: Request, res: Response) => {

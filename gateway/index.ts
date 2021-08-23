@@ -1,8 +1,10 @@
 import express from "express";
 import ControladorGateway from "./controladores/controladorGateway";
+import cors from "cors";
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 const PORT = 8100;
 
 const controladorGateway = new ControladorGateway();

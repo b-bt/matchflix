@@ -47,6 +47,7 @@ class ControladorResultadoVotacao {
       if (!filme) {
         throw new Error("Filme invalido");
       }
+
       if (voto.querAssistir) {
         const resultadoFilme = acc.find(
           (resultado) => resultado.filme.id === voto.filmeId
@@ -60,7 +61,6 @@ class ControladorResultadoVotacao {
       }
       return acc;
     }, new Array<ResultadoVotosFilme>());
-
     return resultados.sort((r1, r2) => r2.votos - r1.votos);
   };
 

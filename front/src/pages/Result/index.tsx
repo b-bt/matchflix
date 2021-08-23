@@ -12,6 +12,8 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useEffect, useState } from "react";
+import api from "../../services/api";
+import { MatchProps } from "../../types";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -45,18 +47,31 @@ interface TableRowData {
   votes: number;
 }
 
-const Result = () => {
+const Result = ({ match }: MatchProps) => {
   const classes = useStyles();
-
-  const createData = (ranking: number, title: string, votes: number) => {
-    return { ranking, title, votes };
-  };
 
   const [rows, setRows] = useState<TableRowData[]>([]);
 
+  const didClickReload = async () => {
+    const roomId = match.params.roomId;
+    const res = await api.get(`/resultados/${roomId}`);
+    var resultData = res.data as [{votos: number, filme: Record<string, any>}];
+    resultData.sort((rhs, lhs) => (rhs.votos > lhs.votos) ? 1 : -1 );
+    const tableRows = resultData.map((result, index) => ({ranking: index, title: result.filme.titulo, votes: result.votos}));
+    setRows(tableRows);
+  };
+
   useEffect(() => {
-    //fetch results to rows
-  });
+    const fetchResults = async () => {
+      const roomId = match.params.roomId;
+      const res = await api.get(`/resultados/${roomId}`);
+      var resultData = res.data as [{votos: number, filme: Record<string, any>}];
+      resultData.sort((rhs, lhs) => (rhs.votos > lhs.votos) ? 1 : -1 );
+      const tableRows = resultData.map((result, index) => ({ranking: index, title: result.filme.titulo, votes: result.votos}));
+      setRows(tableRows);
+    };
+    fetchResults();
+  },[match.params.roomId]);
 
   return (
     <>
@@ -97,6 +112,7 @@ const Result = () => {
             className={classes.button}
             variant={"contained"}
             color={"primary"}
+            onClick={didClickReload}
           >
             Atualizar Resultados
           </Button>
