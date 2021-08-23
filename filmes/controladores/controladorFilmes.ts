@@ -27,6 +27,28 @@ class ControladorFilmes {
 
     res.json(
       filmes.map((filme) => ({
+        id: filme.id,
+        titulo: filme.titulo,
+        descricao: filme.descricao,
+        ano: filme.ano,
+      }))
+    );
+  };
+
+  pegarFilmesPorIds = async (req: Request, res: Response) => {
+    console.log(req.query);
+    if (!req.query.ids) {
+      throw new Error("Parametros invalidos");
+    }
+    const ids = req.query.ids
+      .toString()
+      .split(",")
+      .map((id) => parseInt(id));
+    const filmes = await this.repositorioFilme.getFilmes(ids);
+
+    res.json(
+      filmes.map((filme) => ({
+        id: filme.id,
         titulo: filme.titulo,
         descricao: filme.descricao,
         ano: filme.ano,

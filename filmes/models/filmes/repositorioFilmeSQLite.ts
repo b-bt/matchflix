@@ -11,11 +11,15 @@ class RepositorioFilmeSQLite implements IRepositorioFilme {
   addFilmes = async (
     filmes: { id: string; titulo: string; descricao: string; ano: number }[]
   ): Promise<Filme[]> => {
-    return await Filme.bulkCreate(filmes, { ignoreDuplicates: true });
+    return Filme.bulkCreate(filmes, { ignoreDuplicates: true });
   };
 
-  getFilmes = async (filmes: Record<string, any>[]): Promise<Filme[]> => {
-    return Filme.findAll({ limit: 10 });
+  getFilmes = async (filmesIds: number[]): Promise<Filme[]> => {
+    return Filme.findAll({
+      where: {
+        id: filmesIds,
+      },
+    });
   };
 }
 

@@ -1,11 +1,15 @@
-import Filme from "../filmes/filme.model";
+import IntencaoVoto from "../../mensagens/intencaoVoto";
 import Sala from "../salas/sala.model";
 import Voto from "./voto.model";
 
 interface IRepositorioVoto {
-  getVotos(filme: Filme, sala: Sala): Voto[];
+  getVotos(filmeId: string, sala: Sala): Voto[];
   getQuantVotos(sala: Sala): number;
-  salvarVotos(votos: Voto[]): Promise<boolean>;
+  salvarVotos(
+    votos: IntencaoVoto[],
+    salaId: number,
+    usuarioId: number
+  ): Promise<boolean>;
 }
 
 export default IRepositorioVoto;

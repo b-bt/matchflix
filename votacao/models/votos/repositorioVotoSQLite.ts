@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize-typescript";
-import Filme from "../filmes/filme.model";
+import IntencaoVoto from "../../mensagens/intencaoVoto";
 import Sala from "../salas/sala.model";
 import IRepositorioVoto from "./repositorioVoto.interface";
 import Voto from "./voto.model";
@@ -10,7 +10,7 @@ class RepositorioVotoSQLite implements IRepositorioVoto {
   constructor(conexao: Sequelize) {
     this.conexao = conexao;
   }
-  getVotos(filme: Filme, sala: Sala): Voto[] {
+  getVotos(filmeId: string, sala: Sala): Voto[] {
     // TODO: Call SQLite SELECT
     throw new Error("Method not implemented.");
   }
@@ -20,9 +20,21 @@ class RepositorioVotoSQLite implements IRepositorioVoto {
     throw new Error("Method not implemented.");
   }
 
-  salvarVotos = async (votos: Voto[]): Promise<boolean> => {
+  salvarVotos = async (
+    intencoesVoto: IntencaoVoto[],
+    salaId: number,
+    usuarioId: number
+  ): Promise<boolean> => {
+    const votos = intencoesVoto.map((intencao) =>
+      Voto.build({
+        filmeId: intencao.filmeId,
+        querAssistir: intencao.querAssistir,
+        usuarioId: usuarioId,
+        salaId: salaId,
+      })
+    );
     try {
-      await Voto.bulkCreate(
+      const votosSalvos = await Voto.bulkCreate(
         votos.map((voto) => ({
           filmeId: voto.filmeId,
           querAssistir: voto.querAssistir,
@@ -30,8 +42,11 @@ class RepositorioVotoSQLite implements IRepositorioVoto {
           salaId: voto.salaId,
         }))
       );
+      console.log(votosSalvos);
       return true;
     } catch (error) {
+      console.log(error);
+
       return false;
     }
   };

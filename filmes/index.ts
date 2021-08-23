@@ -12,6 +12,7 @@ const gerenciador = new Gerenciador(fabricaRepositorio);
 const controladorFilmes = new ControladorFilmes(gerenciador);
 
 app.get("/filmes", controladorFilmes.pegarFilmes);
+app.get("/filmesPorIds", controladorFilmes.pegarFilmesPorIds);
 
 app.listen(PORT, () => {
   console.log(`⚡️[server]: Server is running at https://localhost:${PORT}`);

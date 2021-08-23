@@ -1,11 +1,10 @@
-import Filme from "../models/filmes/filme.model";
 import Voto from "../models/votos/voto.model";
 
 class ResultadoVotosFilme {
   votos: number;
-  filme: Filme;
+  filme: Record<string, any>;
 
-  constructor(filme: Filme, votos: number) {
+  constructor(filme: Record<string, any>, votos: number) {
     this.filme = filme;
     this.votos = votos;
   }

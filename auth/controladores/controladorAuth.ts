@@ -43,9 +43,10 @@ class ControladorAuth {
   checarUsuario = async (req: Request, res: Response) => {
     const usuario = (await req.user) as Usuario;
     res.json({
-      nome: usuario.getDataValue("nome"),
-      email: usuario.getDataValue("email"),
-      token: usuario.getDataValue("token"),
+      id: usuario.id,
+      nome: usuario.nome,
+      email: usuario.email,
+      token: usuario.token,
     });
   };
 }

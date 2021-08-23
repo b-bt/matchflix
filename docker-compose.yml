@@ -29,6 +29,9 @@ services:
       - /home/node/app/node_modules
     networks:
       - app-network
+    links:
+      - "auth-service"
+      - "filmes-service"
     command: npx nodemon index.ts
 
   filmes-service:
